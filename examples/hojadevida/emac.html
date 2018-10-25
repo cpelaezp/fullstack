@@ -28,5 +28,28 @@
 		<div id="mensaje4">
 			Esto es una prueba 
 		</div>
+
+		<div id="banner">
+			Esto es una prueba 
+		</div>
+
+		<script type="text/javascript">
+			var texto = "esto es una prueba para manejar javascript desde 0";
+			var hola = texto.split(" ");
+			var ind = 0;
+
+			setInterval(function() {
+				//alert("hola");	
+				var ele = document.getElementById("banner");
+				
+				var text = "";	
+				for(var i = 0; i < ind; i++)
+					text += " " + hola[i];
+
+				ele.innerHTML = text;	
+				ind += 1;
+				if(ind == hola.length + 1) ind = 0;
+			}, 500);
+		</script>
 	</body>
 </html>
