@@ -1,0 +1,70 @@
+Para crear una api en rails
+1. Tener instalado rails (rails --version en la consola de windows)
+2. crear un directorio donde vamos a crear el proyecto
+3. ingresar a la carpeta del proyecto
+4.ejecutar el comando (Este comando prepara el entorno rails con la dependencia de posgres y con la arquitectura MVC)
+rails new myproject -d prosgresql --api
+4.Abrimos la carpeta donde creamos el proyecto e abrimos el archivo database.yml en la ruta config/ y lo editamos con la siguiente información con los datos de la bd que configuramos en la clase anterior
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  database: db_ittalent
+  pool: 5
+  username: postgres
+  password: ittalent
+  host: localhost
+  port: 5432
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+
+5. en la consola creamos un scafold que corresponde a un modelo que va ha estar conectado a la tabla  Pets que creara rails la conectandolo conla clase Pet mediante el ORM en la ruta app/models
+#crear scaffold Pet name:string lasname:string history:text
+rails g scaffold Pet
+#crear base de datos
+rails db:create
+#migrar la tabla 
+rail db:migrate
+#Correr el servidor
+rail server
+
+El servido quedara ejecutandose en el puerto 3000 del localhost
+6.Una vez realizado esto podemos abrir postman creamos una nuevo request en el simbolo +
+7.En method seleccionamos GET y en el vampo de enfrente colocamos la ruta localhost:3000/pets
+si revisamos la liena de comandos veremos 
+Processing by PetsController#index as */*
+  Parameters: {"pet"=>{}}
+  Pet Load (1.0ms)  SELECT "pets".* FROM "pets"
+  ↳ app/controllers/pets_controller.rb:8
+Completed 200 OK in 8ms (Views: 6.0ms | ActiveRecord: 7.0ms
+8.Esto nos crea por debajo los CRUD de nuestro modelo (Create,Update,Delete)
+9.Si incovamos el metodo POST en loa opcion body ingresamos el json de nuestro objecto
+{"name":"string", "lastname":"string", "history":"text"}
+en laconsola veremos
+ Parameters: {"name"=>"string", "history"=>"text", "pet"=>{"name"=>"string", "history"=>"text"}}
+   (1.0ms)  BEGIN
+  ↳ app/controllers/pets_controller.rb:20
+  Pet Create (1.0ms)  INSERT INTO "pets" ("name", "history", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["name",
+"string"], ["history", "text"], ["created_at", "2018-10-28 02:21:49.523813"], ["updated_at", "2018-10-28 02:21:49.523813"]]
+  ↳ app/controllers/pets_controller.rb:20
+   (13.0ms)  COMMIT
+  ↳ app/controllers/pets_controller.rb:20
+Completed 201 Created in 29ms (Views: 1.3ms | ActiveRecord: 19.0ms)
+10.Volvemos a consultar como el punto 7. La peticion en postman nos devolver
+[
+    {
+        "id": 1,
+        "name": "string",
+        "history": "text",
+        "created_at": "2018-10-28T02:21:49.523Z",
+        "updated_at": "2018-10-28T02:21:49.523Z"
+    }
+]
+que seria el json de nuestros objetos pet en la tabla pets.
